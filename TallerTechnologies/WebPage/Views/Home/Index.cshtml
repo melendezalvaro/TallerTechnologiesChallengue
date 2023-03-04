@@ -1,0 +1,81 @@
+﻿@model IEnumerable<WebPage.Application.Car>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<style>
+    .card {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        max-width: 300px;
+        margin: auto;
+        text-align: center;
+    }
+
+    .price {
+        color: grey;
+        font-size: 22px;
+    }
+
+    .card button {
+        color: white;
+        background-color: #000;
+        text-align: center;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    .card input{
+        text-align: center;
+    }
+
+    .card button:hover {
+        opacity: 0.7;
+    }
+</style>
+
+<div class="text-center"> 
+    <h2>List Of Cars</h2>
+
+    @foreach (var item in Model)
+    {
+        <div class="card">
+            <label>Make: @item.Make</label>
+            <label>Model: @item.Model</label>
+            <label>Year: @item.Year</label>
+            <label>Color: @item.Color</label>
+            <label>Doors: @item.Doors</label>
+            <label>Price: @item.Price</label>
+           
+            <input hidden="hidden" type="text" id="txtPrice_@item.Id" value="@item.Price"/>
+            <input type="number" id="txtGuessPrice_@item.Id" min="0" step="1000" value="0"/>
+            <button class="btnGuesPrice" data-car-id="@item.Id">Guess Price</button>
+            
+            <p id="message_@item.Id"></p>
+        </div>
+        <br/>
+    }
+</div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+<script type="text/javascript">    
+    $(function () {        
+        $('.btnGuesPrice').click(function() {
+            var id = $(this).data('car-id');
+            var actualPrice = $('#txtPrice_' + id).val();
+            var guess = $('#txtGuessPrice_' + id).val();
+            const message = document.querySelector('#message_' + id);
+
+            if (Math.abs(guess - actualPrice) <= 5000) {
+                message.style.color = 'green';
+                message.textContent = 'Great job! You are within $5,000 of the actual price.';
+            } else {
+                message.style.color = 'red';
+                message.textContent = 'Sorry, your guess is not within $5,000 of the actual price.';
+            }
+        });
+    });
+</script>
